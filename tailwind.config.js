@@ -23,6 +23,9 @@ export default {
             }
         },
         extend: {
+            fontFamily: {
+                sans: ['Noto Sans SC', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif']
+            },
             colors: {
                 border: 'hsl(var(--border))',
                 borderColor: {

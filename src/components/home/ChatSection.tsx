@@ -84,7 +84,6 @@ export function ChatSection() {
     setInput('');
     setIsTyping(true);
 
-    // Simulate bot reply delay
     setTimeout(() => {
       const botResponse: Message = {
         id: (Date.now() + 1).toString(),
@@ -98,55 +97,53 @@ export function ChatSection() {
   };
 
   return (
-    <section id="chat" className="py-24 px-6 bg-secondary/10 relative">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex flex-col items-center mb-12">
+    <section id="chat" className="py-20 px-6 bg-black">
+      <div className="max-w-3xl mx-auto">
+        <div className="flex flex-col items-center mb-10">
           <motion.h2
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-3xl md:text-5xl font-bold mb-4 text-center tracking-tight"
+            className="text-2xl md:text-4xl font-bold mb-3 text-center text-white"
           >
-            和 Jesse 的数字分身聊聊
+            与数字分身对话
           </motion.h2>
-          <motion.div
-            initial={{ width: 0 }}
-            whileInView={{ width: 120 }}
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="h-1 bg-primary rounded-full mb-6"
-          />
-          <p className="text-muted-foreground text-center max-w-lg">
-            通过 AI 数字人技术，你可以快速了解我的背景、技能和最近的动态。
-          </p>
+            className="text-white/50 text-center text-sm md:text-base"
+          >
+            快速了解我的背景、技能和最近动态
+          </motion.p>
         </div>
 
-        <div className="bg-background/40 backdrop-blur-xl border border-primary/20 rounded-3xl overflow-hidden shadow-2xl flex flex-col h-[600px]">
-          {/* Chat Messages */}
-          <ScrollArea ref={scrollRef} className="flex-1 p-6">
-            <div className="space-y-6">
+        <div className="bg-white/5 border border-red-500/20 rounded-2xl overflow-hidden flex flex-col h-[500px] md:h-[560px]">
+          <ScrollArea ref={scrollRef} className="flex-1 p-4 md:p-5">
+            <div className="space-y-4">
               <AnimatePresence initial={false}>
                 {messages.map((msg) => (
                   <motion.div
                     key={msg.id}
-                    initial={{ opacity: 0, x: msg.role === 'user' ? 20 : -20, y: 10 }}
-                    animate={{ opacity: 1, x: 0, y: 0 }}
-                    transition={{ duration: 0.4 }}
+                    initial={{ opacity: 0, x: msg.role === 'user' ? 16 : -16 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3 }}
                     className={cn(
-                      "flex items-start gap-3",
+                      "flex items-start gap-2.5",
                       msg.role === 'user' ? "flex-row-reverse" : "flex-row"
                     )}
                   >
                     <div className={cn(
-                      "w-10 h-10 rounded-full flex items-center justify-center shrink-0 shadow-sm",
-                      msg.role === 'user' ? "bg-primary text-white" : "bg-secondary text-primary"
+                      "w-8 h-8 rounded-full flex items-center justify-center shrink-0",
+                      msg.role === 'user' ? "bg-red-500 text-white" : "bg-red-500/20 text-white"
                     )}>
-                      {msg.role === 'user' ? <User size={20} /> : <Bot size={20} />}
+                      {msg.role === 'user' ? <User size={16} /> : <Bot size={16} />}
                     </div>
                     <div className={cn(
-                      "max-w-[80%] px-4 py-3 rounded-2xl shadow-sm text-sm md:text-base leading-relaxed",
+                      "max-w-[85%] px-3.5 py-2.5 rounded-xl text-sm md:text-base leading-relaxed",
                       msg.role === 'user'
-                        ? "bg-primary text-white rounded-tr-none"
-                        : "bg-secondary/80 backdrop-blur-sm text-foreground rounded-tl-none border border-primary/5"
+                        ? "bg-red-500 text-white rounded-br-md"
+                        : "bg-red-500/20 text-white rounded-bl-md"
                     )}>
                       {msg.content}
                     </div>
@@ -155,25 +152,24 @@ export function ChatSection() {
               </AnimatePresence>
               {isTyping && (
                 <motion.div
-                  initial={{ opacity: 0, x: -20 }}
+                  initial={{ opacity: 0, x: -16 }}
                   animate={{ opacity: 1, x: 0 }}
-                  className="flex items-center gap-3"
+                  className="flex items-center gap-2.5"
                 >
-                  <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-primary shrink-0">
-                    <Bot size={20} />
+                  <div className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center text-white shrink-0">
+                    <Bot size={16} />
                   </div>
-                  <div className="bg-secondary/80 px-4 py-3 rounded-2xl rounded-tl-none flex gap-1">
-                    <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce [animation-delay:-0.3s]" />
-                    <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce [animation-delay:-0.15s]" />
-                    <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce" />
+                  <div className="bg-red-500/20 px-3.5 py-2.5 rounded-xl rounded-bl-md flex gap-1">
+                    <span className="w-1.5 h-1.5 bg-red-400/40 rounded-full animate-bounce [animation-delay:-0.3s]" />
+                    <span className="w-1.5 h-1.5 bg-red-400/40 rounded-full animate-bounce [animation-delay:-0.15s]" />
+                    <span className="w-1.5 h-1.5 bg-red-400/40 rounded-full animate-bounce" />
                   </div>
                 </motion.div>
               )}
             </div>
           </ScrollArea>
 
-          {/* Input Area */}
-          <div className="p-6 bg-secondary/20 border-t border-primary/10">
+          <div className="p-4 bg-white/5 border-t border-red-500/20">
             <div className={cn(
               "flex gap-2 relative transition-transform duration-100",
               errorShake && "translate-x-1 animate-in shake-horizontal"
@@ -183,14 +179,14 @@ export function ChatSection() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                className="flex-1 bg-background/50 border-primary/20 focus-visible:ring-primary h-12 rounded-xl"
+                className="flex-1 bg-white/5 border-red-500/30 text-white placeholder:text-white/40 focus-visible:ring-red-500/30 h-11 rounded-xl text-sm md:text-base"
               />
               <Button
                 onClick={handleSend}
                 disabled={isTyping}
-                className="h-12 w-12 rounded-xl p-0 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20"
+                className="h-11 w-11 rounded-xl p-0 bg-red-500 text-white hover:bg-red-600"
               >
-                <Send size={20} />
+                <Send size={18} />
               </Button>
             </div>
           </div>
