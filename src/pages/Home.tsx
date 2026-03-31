@@ -2,6 +2,8 @@ import React from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { HeroSection } from '@/components/home/HeroSection';
 import { AboutSection } from '@/components/home/AboutSection';
+import { WorksSection } from '@/components/home/WorksSection';
+import { ContactSection } from '@/components/home/ContactSection';
 import { ChatSection } from '@/components/home/ChatSection';
 
 export default function Home() {
@@ -11,6 +13,8 @@ export default function Home() {
       <main>
         <HeroSection />
         <AboutSection />
+        <WorksSection />
+        <ContactSection />
         <ChatSection />
       </main>
       <footer className="py-10 border-t border-red-500/20 bg-black px-6 text-center text-white/40 text-sm">

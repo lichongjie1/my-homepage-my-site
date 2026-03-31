@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
+import { AIService } from '@/services/aiService';
 
 type Message = {
   id: string;
@@ -13,42 +14,13 @@ type Message = {
   timestamp: Date;
 };
 
-const KNOWLEDGE_BASE = {
-  identity: "我是一名内容策划，专门研究如何将 AI 应用到抖音等内容平台上。",
-  currentWork: "我最近正在搭建自己的个人主页和作品集，同时也尝试用 AI 工具产出更有创意的抖音视频。",
-  skills: "我的核心能力在于内容表达、AI 应用场景探索以及知识体系的整理。",
-  contact: "你可以通过抖音直接私信我，或者关注我正在建设的作品集，在那里我会分享更多联系方式。",
-  works: "目前主要在抖音进行内容实验和 AI 应用案例分享，更多体系化的作品正在整理中，敬请期待！"
-};
-
-const getResponse = (input: string): string => {
-  const query = input.toLowerCase();
-
-  if (query.includes('你谁') || query.includes('身份') || query.includes('职业')) {
-    return KNOWLEDGE_BASE.identity;
-  }
-  if (query.includes('做什么') || query.includes('目前') || query.includes('最近')) {
-    return KNOWLEDGE_BASE.currentWork;
-  }
-  if (query.includes('擅长') || query.includes('方向') || query.includes('能力') || query.includes('特长')) {
-    return KNOWLEDGE_BASE.skills;
-  }
-  if (query.includes('联系') || query.includes('找到') || query.includes('沟通')) {
-    return KNOWLEDGE_BASE.contact;
-  }
-  if (query.includes('作品') || query.includes('案例') || query.includes('视频')) {
-    return KNOWLEDGE_BASE.works;
-  }
-
-  return "这个问题超出了我目前的知识范围，欢迎直接联系 Jesse 了解更多。";
-};
-
 export function ChatSection() {
+  const aiService = new AIService();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'initial',
       role: 'bot',
-      content: '你好！我是 Jesse 的数字分身。你可以问我关于他的职业、最近在做什么或者怎么联系他。',
+      content: '你好！我是李重节的数字分身。你可以问我关于他的情况、最近在做什么或者怎么联系他。',
       timestamp: new Date(),
     },
   ]);
@@ -66,7 +38,7 @@ export function ChatSection() {
     }
   }, [messages, isTyping]);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!input.trim()) {
       setErrorShake(true);
       setTimeout(() => setErrorShake(false), 500);
@@ -84,16 +56,38 @@ export function ChatSection() {
     setInput('');
     setIsTyping(true);
 
-    setTimeout(() => {
+    try {
+      // 准备发送给大模型的消息历史
+      const chatMessages = messages
+        .filter(msg => msg.id !== 'initial')
+        .map(msg => ({
+          role: msg.role === 'user' ? 'user' : 'assistant',
+          content: msg.content
+        }));
+      chatMessages.push({ role: 'user', content: input });
+
+      // 调用大模型API获取回复
+      const response = await aiService.getResponse(chatMessages);
+
       const botResponse: Message = {
         id: (Date.now() + 1).toString(),
         role: 'bot',
-        content: getResponse(userMessage.content),
+        content: response,
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, botResponse]);
+    } catch (error) {
+      console.error('Error getting AI response:', error);
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'bot',
+        content: '抱歉，我暂时无法回答你的问题。请稍后再试。',
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
       setIsTyping(false);
-    }, 1000);
+    }
   };
 
   return (

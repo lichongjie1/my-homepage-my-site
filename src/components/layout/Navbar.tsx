@@ -5,7 +5,9 @@ import { cn } from '@/lib/utils';
 
 const navItems = [
   { name: '关于我', href: '#about' },
-  { name: '数字分身', href: '#chat' },
+  { name: '作品', href: '#works' },
+  { name: '联系我', href: '#contact' },
+  { name: '数字分身', href: '#chat', isPrimary: true },
 ];
 
 export function Navbar() {
@@ -44,14 +46,24 @@ export function Navbar() {
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center space-x-8">
           {navItems.map((item) => (
-            <a
-              key={item.name}
-              href={item.href}
-              onClick={(e) => scrollToAnchor(e, item.href)}
-              className="text-foreground/70 hover:text-primary transition-colors font-medium"
-            >
-              {item.name}
-            </a>
+            item.isPrimary ? (
+              <Button
+                key={item.name}
+                onClick={(e) => scrollToAnchor(e, item.href)}
+                className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-5 py-1.5 font-medium"
+              >
+                {item.name}
+              </Button>
+            ) : (
+              <a
+                key={item.name}
+                href={item.href}
+                onClick={(e) => scrollToAnchor(e, item.href)}
+                className="text-foreground/70 hover:text-primary transition-colors font-medium"
+              >
+                {item.name}
+              </a>
+            )
           ))}
         </div>
 
@@ -65,20 +77,30 @@ export function Navbar() {
       </div>
 
       {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 bg-background border-b border-border p-6 flex flex-col space-y-4 animate-fade-in">
-          {navItems.map((item) => (
-            <a
-              key={item.name}
-              href={item.href}
-              onClick={(e) => scrollToAnchor(e, item.href)}
-              className="text-lg font-medium text-foreground/80 hover:text-primary transition-colors"
-            >
-              {item.name}
-            </a>
-          ))}
-        </div>
-      )}
+        {isMobileMenuOpen && (
+          <div className="md:hidden absolute top-full left-0 right-0 bg-background border-b border-border p-6 flex flex-col space-y-4 animate-fade-in">
+            {navItems.map((item) => (
+              item.isPrimary ? (
+                <Button
+                  key={item.name}
+                  onClick={(e) => scrollToAnchor(e, item.href)}
+                  className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-5 py-2 font-medium w-full"
+                >
+                  {item.name}
+                </Button>
+              ) : (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  onClick={(e) => scrollToAnchor(e, item.href)}
+                  className="text-lg font-medium text-foreground/80 hover:text-primary transition-colors"
+                >
+                  {item.name}
+                </a>
+              )
+            ))}
+          </div>
+        )}
     </nav>
   );
 }
