@@ -21,7 +21,7 @@ export class AIService {
       const response = await axios.post(
         this.apiUrl,
         {
-          model: 'stepfun/step-3.5-flash:free', // 使用指定的模型
+          model: 'gpt-3.5-turbo', // 使用更稳定的模型
           messages: [
             {
               role: 'system',
